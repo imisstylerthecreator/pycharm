@@ -1,4 +1,3 @@
-Jannat Ibrahim, [11/20/2024 7:16 PM]
 class Artist:
     def __init__(self, name):
         self.name = name
@@ -142,10 +141,7 @@ class User:
         if self.subscription.can_skip_ads:
             print(f"{song.title} is playing without ads...")
         else:
-            print(f"{song.
-
-Jannat Ibrahim, [11/20/2024 7:16 PM]
-title} is currently playing")
+            print(f"{song.title} is currently playing")
 
 
 def main_menu():
