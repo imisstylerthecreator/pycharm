@@ -173,7 +173,7 @@ def main_menu():
             user = User.login(username, password)
 
             if user:
-                user_menu(user)
+                user_menu(user)  # Call user_menu here when login is successful.
 
         elif choice == "3":
             print("Goodbye!")
@@ -188,8 +188,9 @@ def user_menu(user):
         print(f"\n--- User Menu ({user.username}) ---")
         print("1. Create Playlist")
         print("2. Show Playlists")
-        print("3. Play Song")
-        print("4. Log Out")
+        print("3. Add Song to Playlist")  # New option for adding songs to playlists
+        print("4. Play Song")
+        print("5. Log Out")
         choice = input("Choose an option: ")
 
         if choice == "1":
@@ -199,21 +200,45 @@ def user_menu(user):
         elif choice == "2":
             user.show_playlists()
 
-        elif choice == "3":
+        elif choice == "3":  # Adding songs to playlists
+            playlist_name = input("Enter the playlist name: ")
+            song_title = input("Enter the song title: ")
+            duration = input("Enter the song duration (mins): ")
+
+            # Search for the playlist by name
+            selected_playlist = None
+            for playlist in user.playlists:
+                if playlist.name == playlist_name:
+                    selected_playlist = playlist
+                    break
+
+            if selected_playlist:
+                # Add the song to the playlist
+                new_song = Song(song_title, duration, None)  # No specific album in this case
+                selected_playlist.add_song(new_song)
+                print(f"'{song_title}' has been added to '{playlist_name}'.")
+            else:
+                print(f"Playlist '{playlist_name}' not found.")
+
+        elif choice == "4":
             song_title = input("Enter song title to play: ")
             for playlist in user.playlists:
                 for song in playlist.songs:
                     if song.title == song_title:
                         user.play_song(song)
                         break
+                else:
+                    continue
+                break
+            else:
+                print("Song not found in any playlist.")
 
-        elif choice == "4":
+        elif choice == "5":
             print("Logged out.")
             break
 
         else:
             print("Invalid choice!")
-
 
 # Start the application
 main_menu()
