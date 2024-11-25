@@ -186,7 +186,8 @@ def user_menu(user):
         print("3/ add song to playlist")
         print("4/ play song")
         print("5/ subscription status")
-        print("6/ logout")
+        print("6/ change password")
+        print("7/ logout")
         choice = input("choose: ")
 
         if choice == "1":
@@ -199,7 +200,7 @@ def user_menu(user):
         elif choice == "3":
             playlist_name = input("enter the playlist name: ")
             song_title = input("enter the song title: ")
-            duration = input("enter the duration name: ")
+            duration = input("enter the duration: ")
 
             selected_playlist = None
             for playlist in user.playlists:
@@ -227,14 +228,15 @@ def user_menu(user):
 
         elif choice == "5":
             if user.subscription:
-                print(f"Subscription Plan: {user.subscription.plan_name}")
-
+                print(f"plan: {user.subscription.plan_name}")
         elif choice == "6":
-            print("Logged out.")
-            break
+            new_password = input("enter new password: ")
+            user.password = new_password
+            print(f"{user.password} is the new password")
 
-        else:
-            print("Invalid choice!")
+        elif choice == "7":
+            print("logged out")
+            break
 
 
 main_menu()
