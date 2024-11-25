@@ -1,3 +1,4 @@
+from abc import abstractmethod
 class Artist:
     def __init__(self, name):
         self.name = name
@@ -33,12 +34,12 @@ class Song:
 
     def get_details(self):
         return f"{self.title} - {self.album.artist.name} [{self.duration} mins] from {self.album}"
-
+    @abstractmethod
     def __str__(self):
         return self.title
 
 
-class Playlist:
+class Playlist(Song):
     def __init__(self, name):
         self.name = name
         self.songs = []
@@ -64,7 +65,7 @@ class Playlist:
 
 
 class Subscription:
-    def __init__(self, plan_name, price, benefits, can_skip_ads=False, can_skip_songs=False):
+    def __init__(self, plan_name, price, benefits, can_skip_ads=None,can_skip_songs=None):
         self.plan_name = plan_name
         self.price = price
         self.benefits = benefits
@@ -90,7 +91,7 @@ class User:
 
     def __init__(self, username, password, subscription=None):
         self.username = username
-        self._password = password  # Sensitive data
+        self._password = password
         self.playlists = []
         self.subscription = subscription
         User.users.append(self)
@@ -146,66 +147,60 @@ class User:
 
 def main_menu():
     while True:
-        print("\n--- Main Menu ---")
-        print("1. Sign In")
-        print("2. Log In")
-        print("3. Exit")
-        choice = input("Choose an option: ")
+        print("1/ sign in")
+        print("2/ log in")
+        print("3/ exit")
+        choice = input("choose: ")
 
         if choice == "1":
-            username = input("Enter username: ")
-            password = input("Enter password: ")
-            plan = input("Choose subscription (free/premium): ").lower()
+            username = input("enter username: ")
+            password = input("enter password: ")
+            plan = input("choose subscription (free/premium): ")
 
             if plan == "free":
                 subscription = FreeSubscription()
             elif plan == "premium":
                 subscription = PremiumSubscription()
             else:
-                print("Invalid subscription type!")
+                print("error")
                 continue
 
             User.signin(username, password, subscription)
 
         elif choice == "2":
-            username = input("Enter username: ")
-            password = input("Enter password: ")
+            username = input("enter username: ")
+            password = input("enter password: ")
             user = User.login(username, password)
 
             if user:
-                user_menu(user)  # Call user_menu here when login is successful.
+                user_menu(user)
 
         elif choice == "3":
-            print("Goodbye!")
+            print("logged out")
             break
-
-        else:
-            print("Invalid choice!")
-
 
 def user_menu(user):
     while True:
-        print(f"\n--- User Menu ({user.username}) ---")
-        print("1. Create Playlist")
-        print("2. Show Playlists")
-        print("3. Add Song to Playlist")  # New option for adding songs to playlists
-        print("4. Play Song")
-        print("5. Log Out")
-        choice = input("Choose an option: ")
+        print("1/ create playlist")
+        print("2/ show playlists")
+        print("3/ add song to playlist")
+        print("4/ play song")
+        print("5/ subscription status")
+        print("6/ logout")
+        choice = input("choose: ")
 
         if choice == "1":
-            playlist_name = input("Enter playlist name: ")
+            playlist_name = input("enter playlist name: ")
             user.create_playlist(playlist_name)
 
         elif choice == "2":
             user.show_playlists()
 
-        elif choice == "3":  # Adding songs to playlists
-            playlist_name = input("Enter the playlist name: ")
-            song_title = input("Enter the song title: ")
-            duration = input("Enter the song duration (mins): ")
+        elif choice == "3":
+            playlist_name = input("enter the playlist name: ")
+            song_title = input("enter the song title: ")
+            duration = input("enter the duration name: ")
 
-            # Search for the playlist by name
             selected_playlist = None
             for playlist in user.playlists:
                 if playlist.name == playlist_name:
@@ -213,32 +208,39 @@ def user_menu(user):
                     break
 
             if selected_playlist:
-                # Add the song to the playlist
-                new_song = Song(song_title, duration, None)  # No specific album in this case
+                new_song = Song(song_title, duration, None)
                 selected_playlist.add_song(new_song)
-                print(f"'{song_title}' has been added to '{playlist_name}'.")
+                print(f"'{song_title}' has been added")
             else:
-                print(f"Playlist '{playlist_name}' not found.")
+                print(f"playlist not found")
 
         elif choice == "4":
-            song_title = input("Enter song title to play: ")
+            song_title = input("enter song to play: ")
             for playlist in user.playlists:
                 for song in playlist.songs:
                     if song.title == song_title:
                         user.play_song(song)
                         break
-                else:
-                    continue
                 break
             else:
                 print("Song not found in any playlist.")
 
         elif choice == "5":
+            if user.subscription:
+                print(f"Subscription Plan: {user.subscription.plan_name}")
+
+        elif choice == "6":
             print("Logged out.")
             break
 
         else:
             print("Invalid choice!")
 
-# Start the application
+
 main_menu()
+'''User.register(Subscription)
+print(issubclass(Subscription, User))
+tryout = Subscription('free')
+print(isinstance(tryout, User))'''
+'''playlist1 = Playlist('eve')
+print(Playlist.__str__(playlist1))'''
